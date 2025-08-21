@@ -7,10 +7,6 @@ CREATE SEQUENCE sec_tipopersona_id START WITH 1 INCREMENT BY 1 NO MINVALUE NO MA
 
 CREATE SEQUENCE sec_rol_id START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 
-CREATE SEQUENCE sec_personanatural_id START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
-
-CREATE SEQUENCE sec_personajuridica_id START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
-
 CREATE SEQUENCE sec_estado_id START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 
 CREATE SEQUENCE sec_usuario_id START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
@@ -46,6 +42,12 @@ CREATE TABLE "persona" (
   "direccion" varchar(200),
   "correo_electronico" varchar(120),
   "tipo_persona" bigint,
+  "fecha_nacimiento" date,
+  "genero" "enum(MASCULINO,FEMENINO)",
+  "razon_social" varchar(120),
+  "nombre_comercial" varchar(150),
+  "fecha_constitucion" date,
+  "representante_legal" bigint,
   "usuario_creacion" varchar(20),
   "fecha_creacion" datetime,
   "usuario_modificacion" varchar(20),
@@ -71,22 +73,6 @@ CREATE TABLE "rol" (
   "rol" varchar(20),
   "codigo" varchar(4),
   "descripcion" varchar(100)
-);
-
-CREATE TABLE "persona_natural" (
-  "id_persona_natural" bigint PRIMARY KEY NOT NULL DEFAULT (nextval('sec_persona_natural_id_persona_natural')),
-  "id_persona" bigint,
-  "fecha_nacimiento" date,
-  "genero" "enum(MASCULINO,FEMENINO)"
-);
-
-CREATE TABLE "persona_juridica" (
-  "id_persona_juridica" bigint PRIMARY KEY NOT NULL DEFAULT (nextval('sec_persona_juridica_id_persona_juridica')),
-  "id_persona" bigint,
-  "razon_social" varchar(120),
-  "nombre_comercial" varchar(150),
-  "fecha_constitucion" date,
-  "representante_legal" bigint
 );
 
 CREATE TABLE "estado" (
@@ -192,7 +178,7 @@ CREATE TABLE "factura" (
   "estado_factura" bigint
 );
 
-------------------------- BLOQUE 3
+----------------- BLOQUE 3
 
 CREATE UNIQUE INDEX ON "persona" ("id_tipo_identificacion", "numero_identificacion");
 
@@ -200,11 +186,7 @@ ALTER TABLE "persona" ADD FOREIGN KEY ("id_tipo_identificacion") REFERENCES "tip
 
 ALTER TABLE "persona" ADD FOREIGN KEY ("tipo_persona") REFERENCES "tipo_persona" ("id_tipo_persona");
 
-ALTER TABLE "persona_natural" ADD FOREIGN KEY ("id_persona") REFERENCES "persona" ("id_persona");
-
-ALTER TABLE "persona_juridica" ADD FOREIGN KEY ("id_persona") REFERENCES "persona" ("id_persona");
-
-ALTER TABLE "persona_juridica" ADD FOREIGN KEY ("representante_legal") REFERENCES "persona" ("id_persona");
+ALTER TABLE "persona" ADD FOREIGN KEY ("representante_legal") REFERENCES "persona" ("id_persona");
 
 ALTER TABLE "usuario" ADD FOREIGN KEY ("id_persona") REFERENCES "persona" ("id_persona");
 
@@ -235,3 +217,4 @@ ALTER TABLE "factura" ADD FOREIGN KEY ("id_pedido") REFERENCES "pedido" ("id_ped
 ALTER TABLE "factura" ADD FOREIGN KEY ("metodo_pago") REFERENCES "metodo_pago" ("id_metodo_pago");
 
 ALTER TABLE "factura" ADD FOREIGN KEY ("estado_factura") REFERENCES "estado" ("id_estado");
+
