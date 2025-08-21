@@ -1,4 +1,4 @@
-# 📘 Tópicos de Programación (Repositorio)
+# 📘 Tópicos avanzados Base de datos (Repositorio)
 
 📚 Repositorio con apunte(s), ejemplos y ejercicios prácticos correspondientes al curso **Tópicos de avanzados de bases de datos**.
 
