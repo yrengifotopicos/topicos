@@ -11,6 +11,12 @@ Table persona {
   direccion varchar(200)
   correo_electronico varchar(120)
   tipo_persona bigint [ref: > tipo_persona.id_tipo_persona]
+  fecha_nacimiento date
+  genero enum('MASCULINO', 'FEMENINO')
+  razon_social varchar(120)
+  nombre_comercial varchar(150)
+  fecha_constitucion date
+  representante_legal bigint [ref: > persona.id_persona]
   usuario_creacion varchar(20)
   fecha_creacion datetime
   usuario_modificacion varchar(20)
@@ -39,22 +45,6 @@ Table rol {
   rol varchar(20)
   codigo varchar(4)
   descripcion varchar(100)
-}
-
-Table persona_natural {
-  id_persona_natural bigint [pk, default: `nextval('sec_persona_natural_id_persona_natural')`, not null]
-  id_persona bigint [ref: > persona.id_persona]
-  fecha_nacimiento date
-  genero enum('MASCULINO', 'FEMENINO')
-}
-
-Table persona_juridica {
-  id_persona_juridica bigint [pk, default: `nextval('sec_persona_juridica_id_persona_juridica')`, not null]
-  id_persona bigint [ref: > persona.id_persona]
-  razon_social varchar(120)
-  nombre_comercial varchar(150)
-  fecha_constitucion date
-  representante_legal bigint [ref: > persona.id_persona]
 }
 
 Table estado {
