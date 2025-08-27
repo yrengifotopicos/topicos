@@ -149,3 +149,114 @@ Table factura {
   total numeric(10, 2)
   estado_factura bigint [ref: > estado.id_estado]
 }
+
+Table persona_hist {
+  id_persona bigint
+  primer_nombre varchar(50)
+  segundo_nombre varchar(50)
+  primer_apellido varchar(50)
+  segundo_apellido varchar(50)
+  id_tipo_identificacion bigint
+  numero_identificacion varchar(20)
+  telefono varchar(15)
+  celular varchar(20)
+  direccion varchar(200)
+  correo_electronico varchar(120)
+  tipo_persona bigint
+  fecha_nacimiento date
+  genero enum('MASCULINO', 'FEMENINO')
+  razon_social varchar(120)
+  nombre_comercial varchar(150)
+  fecha_constitucion date
+  representante_legal bigint
+  usuario_creacion varchar(20)
+  fecha_creacion datetime
+  usuario_modificacion varchar(20)
+  fecha_modificacion datetime
+  fecha_historica datetime
+  accion enum('INSERT', 'UPDATE', 'DELETE')
+  usuario_accion varchar(20)
+}
+
+Table usuario_hist {
+  id_usuario bigint
+  id_persona bigint
+  nombre_usuario varchar(20)
+  contrasena_hash varchar(50)
+  estado bigint
+  ultimo_acceso datetime
+  intentos_fallidos bigint
+  usuario_creacion varchar(20)
+  fecha_creacion datetime
+  usuario_modificacion varchar(20)
+  fecha_modificacion datetime
+  fecha_historica datetime
+  accion enum('INSERT', 'UPDATE', 'DELETE')
+  usuario_accion varchar(20)
+}
+
+Table producto_hist {
+  id_producto bigint
+  id_emprendedor bigint
+  nombre varchar(150)
+  descripcion varchar(250)
+  precio numeric(10, 2)
+  estado bigint
+  fecha_publicacion datetime
+  stock bigint
+  imagen_url text
+  id_categoria bigint
+  usuario_creacion varchar(20)
+  fecha_creacion datetime
+  usuario_modificacion varchar(20)
+  fecha_modificacion datetime
+  fecha_historica datetime
+  accion enum('INSERT', 'UPDATE', 'DELETE')
+  usuario_accion varchar(20)
+}
+
+Table pedido_hist {
+  id_pedido bigint
+  id_cliente bigint
+  fecha_pedido datetime
+  total_pedido numeric(10, 2)
+  estado bigint
+  usuario_creacion varchar(20)
+  fecha_creacion datetime
+  usuario_modificacion varchar(20)
+  fecha_modificacion datetime
+  fecha_historica datetime
+  accion enum('INSERT', 'UPDATE', 'DELETE')
+  usuario_accion varchar(20)
+}
+
+Table factura_hist {
+  id_factura bigint
+  id_pedido bigint
+  metodo_pago bigint
+  fecha datetime
+  total numeric(10, 2)
+  estado_factura bigint
+  fecha_historica datetime
+  accion enum('INSERT', 'UPDATE', 'DELETE')
+  usuario_accion varchar(20)
+}
+
+Table detalle_pedido_hist {
+  id_detalle_pedido bigint
+  id_pedido bigint
+  id_producto bigint
+  cantidad_productos bigint
+  usuario_creacion varchar(20)
+  fecha_creacion datetime
+  usuario_modificacion varchar(20)
+  fecha_modificacion datetime
+  fecha_historica datetime
+  accion enum('INSERT', 'UPDATE', 'DELETE')
+  usuario_accion varchar(20)
+}
+
+
+
+
+
