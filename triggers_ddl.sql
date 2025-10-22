@@ -227,10 +227,58 @@ $ $ LANGUAGE plpgsql;
 -- Eliminar el trigger si ya existe
 DROP TRIGGER IF EXISTS tr_detalle_pedido_hist ON public.detalle_pedido;
 
--- Crear el trigger
 CREATE TRIGGER tr_detalle_pedido_hist
 AFTER
 INSERT
   OR
 UPDATE
   OR DELETE ON public.detalle_pedido FOR EACH ROW EXECUTE FUNCTION public.fn_detalle_pedido_hist();
+
+
+-- =====================================================
+-- TABLA DE PRUEBA Y AUDITORÍA
+-- =====================================================
+CREATE TABLE IF NOT EXISTS public.test_tabla (
+  id serial PRIMARY KEY,
+  descripcion varchar(100),
+  fecha_creacion timestamp DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS public.test_tabla_audit (
+  audit_id serial PRIMARY KEY,
+  id integer,
+  descripcion varchar(100),
+  fecha_creacion timestamp,
+  accion varchar(10),
+  fecha_auditoria timestamp DEFAULT now()
+);
+
+-- =====================================================
+-- FUNCIÓN DE AUDITORÍA PARA test_tabla
+-- =====================================================
+CREATE OR REPLACE FUNCTION public.fn_test_tabla_audit() RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    INSERT INTO public.test_tabla_audit (id, descripcion, fecha_creacion, accion)
+    VALUES (NEW.id, NEW.descripcion, NEW.fecha_creacion, 'INSERT');
+    RETURN NEW;
+  ELSIF TG_OP = 'UPDATE' THEN
+    INSERT INTO public.test_tabla_audit (id, descripcion, fecha_creacion, accion)
+    VALUES (NEW.id, NEW.descripcion, NEW.fecha_creacion, 'UPDATE');
+    RETURN NEW;
+  ELSIF TG_OP = 'DELETE' THEN
+    INSERT INTO public.test_tabla_audit (id, descripcion, fecha_creacion, accion)
+    VALUES (OLD.id, OLD.descripcion, OLD.fecha_creacion, 'DELETE');
+    RETURN OLD;
+  END IF;
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- TRIGGER PARA test_tabla
+-- =====================================================
+DROP TRIGGER IF EXISTS tr_test_tabla_audit ON public.test_tabla;
+CREATE TRIGGER tr_test_tabla_audit
+AFTER INSERT OR UPDATE OR DELETE ON public.test_tabla
+FOR EACH ROW EXECUTE FUNCTION public.fn_test_tabla_audit();
